@@ -1,18 +1,32 @@
-## Environment Setup
+XMP Filter Storage
 
-The project uses encrypted environment variables. To set up:
+A web-based application designed to securely store and manage XMP files used by freelance photo editors. Built with Django, Tailwind CSS, and DaisyUI, this project allows admins to manage user roles (Senior and Junior editors) and provides role-based access to files.
 
-1. Request the .env.gpg file and encryption password from the project admin
-2. Place .env.gpg in the project root
-3. The application will automatically decrypt environment variables on startup
-4. If you need to modify environment variables:
-   ```bash
-   # Decrypt
-   gpg -d .env.gpg > .env
-   
-   # Make your changes to .env
-   
-   # Re-encrypt
-   gpg -c .env
-   ```
-5. Never commit the unencrypted .env file
+🚀 Features
+
+Admin role to manage users and assign roles to Senior and Junior photo editors.
+
+Role-based access control: Senior editors have more privileges than Junior editors.
+
+Secure XMP file storage: Easily manage and store XMP metadata for image files.
+
+User-friendly interface built with Tailwind CSS and DaisyUI.
+
+🛠️ Technologies Used
+
+Backend: Django (Python Framework)
+
+Frontend: Tailwind CSS, DaisyUI
+
+Database: SQLite (default for development; can be switched to PostgreSQL in production)
+
+Authentication: Django’s built-in authentication system
+
+🌍 Getting Started
+Prerequisites
+
+Install Python (>= 3.8)
+
+Install Node.js (for Tailwind CSS)
+
+Install Git for version control
