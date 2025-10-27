@@ -1,0 +1,35 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load widget_tweaks %}
+{% comment %}
+  -------------------------------------------------------------------
+  File: confirm_delete_filter.html
+  Role: Admin/Senior
+  Purpose: Confirm deletion of a filter for a specific event
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+  <div class="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow border border-gray-200 text-center">
+    <h2 class="text-lg font-semibold text-red-600 mb-2">⚠️ Confirm Filter Deletion</h2>
+
+    <p class="text-sm text-gray-700">
+      Are you sure you want to delete the filter:
+      <span class="font-medium text-blue-500 block mt-1">{{ filter.name }}</span>
+    </p>
+
+    <!-- Spacer between event info and buttons -->
+    <div class="h-6"></div>
+
+    <form method="post" class="flex justify-center gap-4">
+      {% csrf_token %}
+      <a href="{% url 'dashboard:event_filters' filter.event.id %}"
+         class="px-4 py-2 text-sm font-medium text-white bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-black">
+        Cancel
+      </a>
+      <button type="submit"
+              class="px-4 py-2 text-sm font-semibold text-white bg-gray-500 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 hover:text-black">
+        Confirm
+      </button>
+    </form>
+  </div>
+{% endblock %}

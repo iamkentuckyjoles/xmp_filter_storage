@@ -1,0 +1,44 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load widget_tweaks %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: update_role.html
+  Role: Admin
+  Purpose: Render user role update form with CSRF protection and styled layout
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+  <div class="max-w-md mx-auto mt-20 p-6 bg-gray-400 rounded-lg shadow border border-indigo-200 text-center">
+    <h2 class="text-lg font-semibold text-white mb-2">
+      Select a new role for: <span class="text-blue-500">{{ user.username }}</span>
+    </h2>
+
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Role Dropdown -->
+      <div class="form-control">
+        {{ form.role|add_class:"select select-bordered select-primary w-full text-center rounded" }}
+        {% if form.role.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ form.role.errors }}</p>
+        {% endif %}
+      </div>
+
+    
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-4">
+        <a href="{% url 'dashboard:view_users_by_role' user.role %}"
+           class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white">
+          Cancel
+        </a>
+        <button type="submit"
+                class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white">
+          Confirm
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

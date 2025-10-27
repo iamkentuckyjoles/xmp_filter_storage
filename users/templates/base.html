@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- Dynamic page title block -->
+    <title>{% block title %}Auth Page{% endblock %}</title>
+
+    <!-- Load static files (CSS, JS, images) -->
+    {% load static %}
+
+    <!-- Global stylesheet for user-facing pages -->
+    <link href="{% static 'src/output.css' %}" rel="stylesheet">
+    
+    <!-- Optional head block for page-specific meta or scripts -->
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="container justify-center mx-auto px-4 py-6 min-h-screen">
+        
+        <!-- Main content block injected by child templates -->
+        {% block content %}
+        <!-- Page-specific content goes here -->
+        {% endblock %}
+
+    </div>
+
+    <!-- Optional block for page-specific scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>

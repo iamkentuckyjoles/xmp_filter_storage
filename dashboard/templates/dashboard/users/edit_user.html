@@ -1,0 +1,67 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load widget_tweaks %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: edit_user.html
+  Role: Admin
+  Purpose: Render user editing form with CSRF protection and styled layout
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+  <div class="max-w-md mx-auto mt-16 p-6 bg-gray-400 rounded-lg shadow border border-indigo-200">
+    <h2 class="text-xl font-semibold text-white mb-4 text-center">✏️ Edit User: {{ user.username }}</h2>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Username Field -->
+      <div class="form-control">
+        <label for="id_username" class="label">
+          <span class="label-text text-white">Username</span>
+        </label>
+        {{ form.username|add_class:"input input-bordered input-primary w-full text-center rounded" }}
+        {% if form.username.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ form.username.errors }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-control">
+        <label for="id_email" class="label">
+          <span class="label-text text-white">Email</span>
+        </label>
+        {{ form.email|add_class:"input input-bordered input-primary w-full text-center rounded" }}
+        {% if form.email.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ form.email.errors }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Role Field (if applicable) -->
+      {% if form.role %}
+        <div class="form-control">
+          <label for="id_role" class="label">
+            <span class="label-text text-white">Role</span>
+          </label>
+          {{ form.role|add_class:"select select-bordered select-primary w-full text-center" }}
+          {% if form.role.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.role.errors }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Action Buttons -->
+      <div class="flex justify-center gap-4 pt-2">
+        <a href="{% url 'dashboard:view_users_by_role' user.role %}"
+          class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white">
+          Cancel
+        </a>
+        <button type="submit"
+          class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white">
+          Confirm
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

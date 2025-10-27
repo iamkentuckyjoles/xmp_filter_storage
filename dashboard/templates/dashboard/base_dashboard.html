@@ -1,0 +1,147 @@
+<!-- dashboard/templates/dashboard/base_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="cupcake">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+
+    <!-- ✅ Global stylesheet for user-facing pages -->
+    <link href="{% static 'src/output.css' %}" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ✅ Full-screen flex layout with sidebar on the left -->
+     {% include "dashboard/header.html" %}
+    <div class="min-h-screen bg-gray-400 flex gap-x-1">
+
+        <!-- ✅ Sidebar navigation (left corner) -->
+        <aside class="w-68 bg-gray-500 shadow-md px-3 py-8">
+
+            <!-- ✅ Role-based navigation -->
+            <nav>
+            <ul class="space-y-0.5 text-medium font-small text-black-800">
+                {% if request.user.role|upper == "ADMIN" %}
+                <li>
+                <a href="{% url 'dashboard:admin_home' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- Home Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+                </li>
+
+               <li>
+                <a href="{% url 'dashboard:create_user' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- 👤 Add User Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 9a3 3 0 11-6 0 3 3 0 016 0zM6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
+                    </svg>
+                    <span>Add User</span>
+                </a>
+                </li>
+
+                <li>
+                <a href="{% url 'dashboard:view_users' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- 📋 View Users Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10" />
+                    </svg>
+                    <span>Users</span>
+                </a>
+                </li>
+                {% endif %}
+
+               {% if request.user.role|upper == "SENIOR" %}
+                <li>
+                <a href="{% url 'dashboard:senior_home' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- 🏠 Home Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+                </li>
+                {% endif %}
+
+                {% if request.user.role|upper == "JUNIOR" %}
+                <li>
+                <a href="{% url 'dashboard:junior_home' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- 🏠 Home Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+                </li>
+                {% endif %}
+
+                {% if request.user.role == 'admin' or request.user.role == 'senior' %}
+                <li>
+                <a href="{% url 'dashboard:create_event' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- ➕ Create Event Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>New Event</span>
+                </a>
+                </li>
+                {% endif %}
+
+                <li>
+                <a href="{% url 'dashboard:event_folder_list' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- 📁 View Folders Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 7a2 2 0 012-2h5l2 2h9a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                    </svg>
+                    <span>Events</span>
+                </a>
+                </li>
+
+                {% if request.user.role|upper == "ADMIN" %}
+                <li>
+                <a href="{% url 'clockify_integration:reports' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- Home Icon -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z" />
+                    </svg>
+                    <span>Clockify Reports</span>
+                </a>
+                </li>
+                {% endif %}
+            </ul>
+            </nav>
+        </aside>
+
+        <!-- ✅ Main content area -->
+        <main class="flex-1 px-8 py-8">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+    </div>
+    
+
+    <!-- ✅ Recommended: Link your custom JavaScript here -->
+    
+    {% include "dashboard/footer.html" %}
+
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

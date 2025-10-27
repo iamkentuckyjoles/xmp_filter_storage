@@ -1,0 +1,51 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load widget_tweaks %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: edit_event.html
+  Role: Admin
+  Purpose: Render event editing form with CSRF protection and styled layout
+  -------------------------------------------------------------------
+{% endcomment %}
+{% block content %}
+  <div class="max-w-md mx-auto mt-16 p-6 bg-gray-400 rounded-lg shadow border border-indigo-200">
+    <h2 class="text-xl font-semibold text-white mb-4 text-center">Edit Event</h2>
+
+      <form method="post" class="space-y-6 max-w-md mx-auto text-justify-center">
+        {% csrf_token %}
+
+        <div class="form-control">
+          <label for="id_name" class="label">
+            <span class="label-text ">Name</span>
+          </label>
+          {{ form.name|add_class:"input input-bordered input-primary w-1/2 text-center rounded-lg" }}
+          {% if form.name.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.name.errors }}</p>
+          {% endif %}
+        </div>
+
+        <div class="form-control">
+          <label for="id_year" class="label">
+            <span class="label-text">Year</span>
+          </label>
+          {{ form.year|add_class:"input input-bordered input-primary w-1/3  text-center rounded-lg" }}
+          {% if form.year.errors %}
+            <p class="text-red-500 text-sm mt-1">{{ form.year.errors }}</p>
+          {% endif %}
+        </div>
+
+        <div class="flex justify-end space-x-4">
+          <a href="{% url 'dashboard:event_folder_list' %}"
+            class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white">
+            Cancel
+          </a>
+
+          <button type="submit"
+                  class="px-4 py-2 text-sm font-medium text-black bg-gray-400 border border-gray-300 rounded-md hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-400">
+             Confirm
+          </button>
+        </div>
+      </form>
+  </div>
+{% endblock %}

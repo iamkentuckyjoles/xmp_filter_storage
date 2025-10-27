@@ -1,0 +1,9 @@
+
+{% block title %}Logged Out{% endblock %}
+
+{% include 'dashboard/components/message_alert.html' with alert_class="bg-green-600 text-white border-indigo-200 shadow-lg" %}
+
+{% block content %}
+
+<!-- Link to login page -->
+<a href="{% url 'users:login' %}">Log back in</a>

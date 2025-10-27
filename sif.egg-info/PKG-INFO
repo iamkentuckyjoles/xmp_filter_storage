@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: sif
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: django>=5.2.5
+Requires-Dist: django-widget-tweaks>=1.4.12
+Requires-Dist: django-crispy-forms>=2.0
+Requires-Dist: crispy-tailwind>=0.5.0
+Requires-Dist: Pillow>=10.0.0
+Requires-Dist: python-dotenv>=1.0.0

@@ -1,0 +1,21 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: junior_home.html
+  Role: Junior Editor
+  Purpose: Display popup messages (e.g., success, error) on dashboard
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+{% include "dashboard/role_greeting.html" %}
+  {% if messages %}
+    <div class="popup-message">
+      {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+

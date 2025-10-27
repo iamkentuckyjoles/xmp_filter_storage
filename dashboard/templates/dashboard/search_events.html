@@ -1,0 +1,20 @@
+<!-- 🔍 Event Folder Search Interface -->
+<h2>📁 Search Event Folders</h2>
+
+<form method="get">
+  {{ form.as_p }}
+  <button type="submit">Search</button>
+</form>
+
+{% if results %}
+  <ul>
+    {% for event in results %}
+      <li>
+        <strong>{{ event.name }}</strong> ({{ event.year }})  
+        <a href="{% url 'dashboard:view_event' event.id %}">Open Folder</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No matching events found.</p>
+{% endif %}

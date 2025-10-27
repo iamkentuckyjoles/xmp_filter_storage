@@ -1,0 +1,129 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load widget_tweaks %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: event_folders.html
+  Role: All roles
+  Purpose: Display searchable list of events with role-based edit/delete controls.
+           Includes autocomplete inputs for name/year, pagination, and fallback messaging.
+  -------------------------------------------------------------------
+{% endcomment %}
+{% block content %}
+{% include 'dashboard/components/message_alert.html' with alert_class="bg-green-600 text-white border-indigo-200 shadow-lg" %}
+<div class="max-w-4xl mx-auto px-4 ">
+  <!-- Header -->
+      <header class="mb-8 text-center">
+        <h2 class="text-2xl font-semibold text-white centered">View All Events</h2>
+      </header>
+
+  <!-- 🔍 Search bar with autocomplete for event name and year -->
+  <form method="get" class="bg-gray-400 p-6 rounded shadow-md border border-indigo-200 mb-4 space-y-4">
+    <div class="flex flex-wrap gap-4 items-center">
+      <!-- 📝 Autocomplete input for event name -->
+      <input type="text" name="name" placeholder="Event Name" list="name-options"
+             class=" w-full flex-1 min-w-[200px] px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 " />
+      <datalist id="name-options">
+        {% for name in name_list %}
+          <option value="{{ name }}">
+        {% endfor %}
+      </datalist>
+
+      <!-- 📅 Autocomplete input for event year -->
+      <input type="number" name="year" placeholder="Year" list="year-options"
+             class="flex-1 min-w-[200px] px-4 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-1/3" />
+      <datalist id="year-options">
+        {% for year in year_list %}
+          <option value="{{ year }}">
+        {% endfor %}
+      </datalist>
+
+      <!-- 🔎 Submit button -->
+      <button type="submit"
+              class="bg-white text-black hover:bg-blue-600 hover:text-white font-semibold px-6 py-1 rounded-md transition duration-200">
+        Search
+      </button>
+    </div>
+  </form>
+
+  <!-- 📋 Event list with pagination -->
+  {% if events %}
+    <ul class="space-y-3">
+      {% for event in events %}
+        <li class="group">
+          <div class="bg-gray-400 border border-gray-200 rounded-md p-4 px-4 flex justify-between items-center hover:shadow-sm hover:bg-blue-700 transition">
+            <a href="{% url 'dashboard:event_filters' event.id %}"
+               class="text-white group-hover:underline font-medium flex-grow">
+              📁 {{ event.name }} ({{ event.year }})
+            </a>
+            
+            {% if user.role in 'admin senior' %}
+              <div class="flex gap-4 items-center text-sm">
+                <a href="{% url 'dashboard:edit_event' event.id %}" 
+                   class="flex items-center gap-1 text-indigo-800 hover:text-green-500 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M11 4h2M4 20h16M4 20l4-4m0 0L17 7a2.828 2.828 0 10-4-4L4 16l4 4z" />
+                  </svg>
+                  <span>Edit</span>
+                </a>
+
+                <a href="{% url 'dashboard:delete_event' event.id %}" 
+                   class="flex items-center gap-1 text-indigo-800 hover:text-red-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m2 0v12a2 2 0 01-2 2H8a2 2 0 01-2-2V7h12z" />
+                  </svg>
+                  <span>Delete</span>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    <br />
+    <!-- 📄 Pagination Controls -->
+    {% if events.has_other_pages %}
+    <div class="flex justify-center items-center space-x-2 mt-12 mb-8">
+        <!-- Previous Page Button -->
+        {% if events.has_previous %}
+            <a href="?page={{ events.previous_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" 
+               class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-blue-500 hover:text-white transition-all duration-200"
+               aria-label="Previous page">
+                &laquo; Previous
+            </a>
+        {% endif %}
+
+        <!-- Page Numbers -->
+        {% for num in events.paginator.page_range %}
+            {% if events.number == num %}
+                <span class="px-4 py-2 bg-blue-600 text-white rounded-md" 
+                      aria-current="page">
+                    {{ num }}
+                </span>
+            {% else %}
+                <a href="?page={{ num }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" 
+                   class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-blue-500 hover:text-blue-500 transition-all duration-200"
+                   aria-label="Go to page {{ num }}">
+                    {{ num }}
+                </a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Next Page Button -->
+        {% if events.has_next %}
+            <a href="?page={{ events.next_page_number }}{% if request.GET.name %}&name={{ request.GET.name }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" 
+               class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-blue-500 hover:text-blue-500 transition-all duration-200"
+               aria-label="Next page">
+                Next &raquo;
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+  {% else %}
+    <!-- 🛑 Fallback message if no events exist -->
+    <p class="text-center text-gray-500 mt-6">No events assigned.</p>
+  {% endif %}
+</div>
+{% endblock %}

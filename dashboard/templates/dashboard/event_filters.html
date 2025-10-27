@@ -1,0 +1,74 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+{% comment %}
+  -------------------------------------------------------------------
+  File: event_filters.html
+  Role: Admin/Senior
+  Purpose: Display filters for a specific event and allow uploads
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+{% include 'dashboard/components/message_alert.html' with alert_class="bg-green-600 text-white border-indigo-200 shadow-lg" %}
+<div class="max-w-4xl mx-auto px-4">
+
+  {% if request.user.role == 'admin' or request.user.role == 'senior' %}
+    <div class="flex justify-end mb-6">
+      <a href="{% url 'dashboard:upload_filter' event.id %}"
+         class="inline-block bg-black hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+        📤 Upload Filter
+      </a>
+    </div>
+  {% endif %}
+  
+  <h2 class="text-2xl font-semibold text-white mb-4">
+    Filters for <span class="text-blue-600">{{ event.name }} ({{ event.year }})</span>
+  </h2>
+
+  
+
+  <hr class="border-white mb-6">
+
+  {% if filters %}
+    <ul class="space-y-4">
+      {% for filter in filters %}
+        <div class="relative">
+          <a href="{{ filter.file.url }}" 
+             download 
+             class="block w-full">
+            <li class="flex justify-between items-center bg-gray-150 p-4 rounded-md shadow-sm border border-gray-200 hover:bg-blue-600 group">
+              <div class="flex-grow">
+                <p class="font-medium text-gray-800 group-hover:text-green">
+                  🎚️ {{ filter.name }}
+                </p>
+                {% if filter.uploaded_at %}
+                  <p class="text-sm text-gray-500 mt-1 group-hover:text-gray-200">
+                    Uploaded on {{ filter.uploaded_at|date:"M d, Y H:i" }}
+                  </p>
+                {% endif %}
+              </div>
+              
+              {% if user.role in 'admin senior' %}
+                <div class="flex items-center ml-4">
+                  <a href="{% url 'dashboard:delete_filter' filter.id %}" 
+                     class="flex items-center gap-1 text-indigo-800 hover:text-red-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m2 0v12a2 2 0 01-2 2H8a2 2 0 01-2-2V7h12z" />
+                  </svg>
+                  <span>Delete</span>
+                </a>
+                </div>
+              {% endif %}
+            </li>
+          </a>
+        </div>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-center text-gray-500">No filters found</p>
+  {% endif %}
+
+ 
+</div>
+{% endblock %}

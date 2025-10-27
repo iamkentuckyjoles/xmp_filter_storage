@@ -1,0 +1,99 @@
+<!-- users/templates/users/login.html -->
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class=" text-base-content flex items-center justify-center min-h-screen px-4 py-4">
+  <div class="bg-gray-500 text-white px-6 py-6 rounded-lg shadow-lg w-full max-w-md justify-center">
+
+    <!-- 🖼️ Enlarged Logo Placeholder -->
+    <div class="flex justify-center mb-3">
+      <div class="h-20 w-20 bg-white rounded-full flex items-center justify-center text-gray-400 text-xl font-bold shadow-md">
+        LOGO
+      </div>
+    </div>
+
+    <!-- 📝 Header -->
+    <div class="text-center mb-4">
+      <h1 class="text-xl text-gray-900 font-semibold">Exclusive for Editors Only</h1>
+      <p class="mt-1 text-gray-700 text-sm">Sign in to access your dashboard</p>
+    </div>
+
+    <!-- 💬 Flash messages -->
+    {% include 'dashboard/components/message_alert.html' with alert_class="bg-red-500 text-red-800 border-indigo-200 shadow-lg font-small" %}
+
+    <!-- 🔐 Login Form -->
+    <form method="post" class="space-y-5 text-sm text-white text-center">
+      {% csrf_token %}
+
+      <!-- Username -->
+      <div class="mx-auto w-2/3">
+        <input type="text" name="username" id="username"
+                placeholder="Username"
+                class="w-full bg-white text-black placeholder-gray-400 border border-gray-500 px-3 py-1.5 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
+                required>
+      </div>
+
+      <!-- Password + Forgot Password -->
+      <div class="mx-auto w-2/3">
+        <div class="relative">
+          <input type="password" name="password" id="password"
+                  placeholder="Password"
+                  class="w-full bg-white text-black placeholder-gray-400 border border-gray-500 px-3 py-1.5 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
+                  required>
+          <button type="button" onclick="togglePassword()" class="absolute right-3 top-2 text-gray-500 hover:text-gray-700">
+            <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+              <!-- Open Eye -->
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+        <div class="flex justify-end mt-1">
+          <a href="#" class="text-xs text-gray-400 hover:text-blue-800">Forgot password?</a>
+        </div>
+
+      <!--Submit -->
+      <div class="mx-auto w-full space-y-3 mt-2">
+        <div class="flex justify-center">
+          <button type="submit"
+                  class="btn btn-dash btn-info w-1/2 bg-white text-black py-2 rounded-full hover:bg-blue-700 hover:text-white transition duration-200 font-semibold">
+            Login
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById("password");
+    const icon = document.getElementById("eyeIcon");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.innerHTML = `
+        <!-- Closed Eye -->
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.223-3.592M6.634 6.634A9.956 9.956 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.956 9.956 0 01-1.272 2.592M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3l18 18" />
+      `;
+    } else {
+      input.type = "password";
+      icon.innerHTML = `
+        <!-- Open Eye -->
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      `;
+    }
+  }
+</script>
+{% endblock %}

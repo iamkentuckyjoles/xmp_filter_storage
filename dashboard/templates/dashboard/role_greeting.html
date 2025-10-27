@@ -1,0 +1,35 @@
+<!-- Role-based greeting block -->
+<div class="mb-6 px-6 py-4 bg-gradient-to-r from-indigo-100 via-white to-indigo-100 rounded-lg shadow-md border border-indigo-200 animate-fade-in">
+  <div class="flex items-center space-x-4">
+    <div class="text-indigo-600 text-3xl">
+      {% if request.user.role|upper == "ADMIN" %} 🛡️
+      {% elif request.user.role|upper == "SENIOR" %} 🎯
+      {% elif request.user.role|upper == "JUNIOR" %} ✨
+      {% else %} 👋
+      {% endif %}
+    </div>
+    <div>
+      {% if request.user.role|upper == "ADMIN" %}
+        <h2 class="text-xl font-bold text-gray-800">
+          Great to have you, <span class="text-indigo-700">{{ request.user.username|upper }}</span>
+        </h2>
+        <p class="text-sm text-gray-600">You're logged in as <strong>{{ request.user.role|upper }}</strong></p>
+      {% elif request.user.role|upper == "SENIOR" %}
+        <h2 class="text-xl font-bold text-gray-800">
+          Welcome back, <span class="text-indigo-700">{{ request.user.username|upper }}</span>
+        </h2>
+        <p class="text-sm text-gray-600">Role: <strong>{{ request.user.role|upper }}</strong> – Photo Editor</p>
+      {% elif request.user.role|upper == "JUNIOR" %}
+        <h2 class="text-xl font-bold text-gray-800">
+          Hello, <span class="text-indigo-700">{{ request.user.username|upper }}</span>
+        </h2>
+        <p class="text-sm text-gray-600">Role: <strong>{{ request.user.role|upper }}</strong> – Photo Editor</p>
+      {% else %}
+        <h2 class="text-xl font-bold text-gray-800">
+          Welcome, <span class="text-indigo-700">{{ request.user.username|upper }}</span>
+        </h2>
+        <p class="text-sm text-gray-600">Your role: <strong>{{ request.user.role|upper }}</strong></p>
+      {% endif %}
+    </div>
+  </div>
+</div>

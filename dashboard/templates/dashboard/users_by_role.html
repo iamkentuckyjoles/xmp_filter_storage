@@ -1,0 +1,48 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% comment %}
+  -------------------------------------------------------------------
+  File: users_by_role.html
+  Role: Admin
+  Purpose: Display users filtered by role with action links for each user
+  -------------------------------------------------------------------
+{% endcomment %}
+
+{% block content %}
+
+{% include 'dashboard/components/message_alert.html' with alert_class="bg-green-600 text-white border-indigo-200 shadow-lg" %}
+
+<div class="max-w-5xl mx-auto px-4 space-y-6">
+  <h2 class="text-2xl font-semibold text-white mb-4 text-center">
+    All {{ label }}
+  </h2>
+
+  <table class="min-w-full bg-white border border-gray-200 rounded-md shadow-sm">
+    <thead class="bg-gray-100 text-gray-700 text-sm">
+      <tr>
+        <th class="px-4 py-2 text-center">Username</th>
+        <th class="px-4 py-2 text-center">Email</th>
+        {% if role != 'admin' %}
+          <th class="px-4 py-2 text-center">Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody class="text-sm divide-y divide-gray-200 text-center">
+      {% for user in users %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 font-medium text-gray-800">{{ user.username }}</td>
+          <td class="px-4 py-2 text-gray-600">{{ user.email }}</td>
+          {% if role != 'admin' %}
+            <td class="px-4 py-2 space-x-2">
+              <a href="{% url 'dashboard:edit_user' user.id %}" class="text-indigo-600 hover:underline">✏️ Edit</a>
+              <a href="{% url 'dashboard:update_role' user.id %}" class="text-blue-600 hover:underline btn btn-primary">🔄 Update Role</a>
+              <a href="{% url 'dashboard:delete_user' user.id %}" class="text-red-600 hover:underline">🗑️ Delete</a>
+              <a href="{% url 'users:admin_change_user_password' user.id %}" class="text-black hover:underline">Change Password</a>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
