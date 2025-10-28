@@ -37,3 +37,4 @@ def logout_view(request):
     messages.success(request, "You’ve been logged out.")  # Optional feedback
 
     return redirect('users:login')  #  Redirect to login page
+

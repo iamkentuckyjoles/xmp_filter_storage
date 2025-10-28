@@ -17,5 +17,10 @@
       {% endfor %}
     </div>
   {% endif %}
+  <li>
+  <a href="{% url 'dashboard:view_forgot_password_requests' %}" class="hover:text-blue-700">
+    Forgot Password Requests
+  </a>
+</li>
 {% endblock %}
 

@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from dashboard.utils import admin_required
 from django.contrib.auth.decorators import login_required, user_passes_test
 from dashboard.utils import is_admin
-
+from users.models import ForgotPasswordRequest  
 
 User = get_user_model()
 
@@ -55,3 +55,19 @@ def delete_user(request, user_id):
 
     return render(request, 'dashboard/users/delete_user.html', {'user': user})
 
+
+# 📬 View all forgot password requests (admin-only)
+@admin_required
+def view_forgot_password_requests(request):
+    requests = ForgotPasswordRequest.objects.all().order_by('-created_at')
+    return render(request, 'dashboard/forgot_password_request.html', {'requests': requests})
+
+
+# ✅ Mark a forgot password request as handled (admin-only)
+@admin_required
+def mark_forgot_password_handled(request, request_id):
+    req = get_object_or_404(ForgotPasswordRequest, id=request_id)
+    req.status = 'Handled'
+    req.save()
+    messages.success(request, f'Request from {req.name} marked as handled.')
+    return redirect('dashboard:view_forgot_password_requests')

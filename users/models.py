@@ -16,3 +16,29 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.role})"  # Display username with role
+    
+
+# -------------------------------------------------------------------
+# Model: ForgotPasswordRequest
+# Purpose: Store password reset requests from users     
+# -------------------------------------------------------------------
+class ForgotPasswordRequest(models.Model):
+    ROLE_CHOICES = [
+        ('senior', 'Senior'),
+        ('junior', 'Junior'),
+    ]
+
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Handled', 'Handled'),
+    ]
+
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    message = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.role}) - {self.status}"
