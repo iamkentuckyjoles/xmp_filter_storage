@@ -17,6 +17,6 @@ def forgot_password(request):
         )
 
         messages.success(request, 'Your request has been submitted successfully. Please check your email within the day. Thank you!')
-        return redirect('users:login')  # Redirects to login page
+        return redirect('users:forgot_password')  # Redirects to login page
 
     return render(request, 'user/forgot_password.html')

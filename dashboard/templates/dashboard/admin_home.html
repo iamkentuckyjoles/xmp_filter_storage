@@ -18,9 +18,14 @@
     </div>
   {% endif %}
   <li>
-  <a href="{% url 'dashboard:view_forgot_password_requests' %}" class="hover:text-blue-700">
-    Forgot Password Requests
-  </a>
+    <a href="{% url 'dashboard:view_forgot_password_requests' %}" class="hover:text-blue-700 flex items-center">
+        Forgot Password Requests
+        {% if pending_requests_count > 0 %}
+        <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+            {{ pending_requests_count }}
+        </span>
+        {% endif %}
+    </a>
 </li>
 {% endblock %}
 
