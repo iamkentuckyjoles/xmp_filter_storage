@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import subprocess
 from dotenv import load_dotenv
+from datetime import timedelta
 
 def load_encrypted_env():
     try:
@@ -57,14 +58,8 @@ ALLOWED_HOSTS = []
 # Clockify API Key
 CLOCKIFY_API_KEY = os.getenv('CLOCKIFY_API_KEY')
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'           
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
 
 # Application definition
 INSTALLED_APPS = [
@@ -74,14 +69,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # apps
     'users',
     'dashboard',
     'event',
     'clockify_integration',
+    #style
     'widget_tweaks',
+    #security
+    'axes',
 ]
 
-
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',      # 🛡️ Axes backend for brute-force protection
+    'django.contrib.auth.backends.ModelBackend',
+]
 # Custom user model and authentication redirects
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -90,6 +92,7 @@ LOGIN_REDIRECT_URL = '/dashboard/' # ✅ Where users land after login
 LOGIN_URL = '/login/' # 🔁 Where unauthenticated users are sent
 
 MIDDLEWARE = [
+    'axes.middleware.AxesMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -173,6 +176,22 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",  # ✅ Points to the global static folder at project root
 ]
+
+# Email configuration for sending emails (e.g., password resets)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'           
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Django-Axes configuration
+AXES_FAILURE_LIMIT = 5  # 🚫 Lock out after 5 failed attempts
+AXES_COOLOFF_TIME = timedelta(minutes=10)   # ⏱️ 10-minute lockout
+AXES_LOCKOUT_TEMPLATE = 'user/lockout.html'
+AXES_ONLY_USER_FAILURES = True
+AXES_LOCK_OUT_BY_COMBINATION_USER_AND_IP = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

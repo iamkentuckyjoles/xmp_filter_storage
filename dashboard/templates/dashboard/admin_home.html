@@ -17,15 +17,23 @@
       {% endfor %}
     </div>
   {% endif %}
-  <li>
-    <a href="{% url 'dashboard:view_forgot_password_requests' %}" class="hover:text-blue-700 flex items-center">
-        Forgot Password Requests
+  <ul class="list-none">
+    <li>
+      <a href="{% url 'dashboard:view_forgot_password_requests' %}"
+        class="flex items-center justify-center gap-2 bg-gray-400 border border-gray-300 hover:bg-blue-600 hover:text-white
+                text-gray-800 font-semibold px-4 py-2 rounded-lg transition duration-200 shadow-sm">
+        
         {% if pending_requests_count > 0 %}
-        <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
-            {{ pending_requests_count }}
+        <!-- Circular count badge -->
+        <span class="flex items-center justify-center text-red-600 text-lg font-semibold rounded-full w-8 h-8">
+          {{ pending_requests_count }}
         </span>
         {% endif %}
-    </a>
-</li>
+        
+        <!-- 📩 Button text -->
+        <span>Forgot Password Request</span>
+      </a>
+    </li>
+  </ul>
 {% endblock %}
 

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+  <div class="bg-gray-200 shadow-lg rounded-lg p-6 text-center w-full max-w-sm">
+    <h1 class="text-xl font-bold text-red-600 mb-2">Too Many Login Attempts</h1>
+    <p class="text-gray-700 mb-4">
+      You’ve been temporarily locked out for your security.
+    </p>
+
+    <!-- Hidden initially -->
+    <p id="countdownText" class="text-gray-700 mb-4 hidden">
+      Please wait <span id="countdown" class="font-semibold text-red-800"></span> before trying again.
+    </p>
+
+    <!-- Hidden initially -->
+    <a id="backToLogin" href="{% url 'users:login' %}"
+       class="text-blue-600 hover:underline hidden">
+      You can now login
+    </a>
+  </div>
+</div>
+
+<script>
+  // Duration: 15 minutes (in seconds)
+  const LOCKOUT_DURATION = 15 * 60;
+  const STORAGE_KEY = "lockout_start_time";
+
+  const countdownEl = document.getElementById("countdown");
+  const countdownText = document.getElementById("countdownText");
+  const backToLogin = document.getElementById("backToLogin");
+
+  let lockoutStart = localStorage.getItem(STORAGE_KEY);
+
+  if (!lockoutStart) {
+    lockoutStart = Date.now();
+    localStorage.setItem(STORAGE_KEY, lockoutStart);
+  }
+
+  function updateCountdown() {
+    const elapsedSeconds = Math.floor((Date.now() - lockoutStart) / 1000);
+    const remainingSeconds = LOCKOUT_DURATION - elapsedSeconds;
+
+    if (remainingSeconds <= 0) {
+      countdownText.classList.add("hidden");
+      backToLogin.classList.remove("hidden");
+      localStorage.removeItem(STORAGE_KEY);
+      clearInterval(timer);
+      return;
+    }
+
+    countdownText.classList.remove("hidden");
+
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+    countdownEl.textContent = `${minutes}m ${seconds < 10 ? '0' : ''}${seconds}s`;
+  }
+
+  const timer = setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+{% endblock %}
