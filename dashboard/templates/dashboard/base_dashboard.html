@@ -111,19 +111,36 @@
                 </a>
                 </li>
 
-                {% if request.user.role|upper == "ADMIN" %}
-                <li>
-                <a href="{% url 'clockify_integration:reports' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
-                    <!-- Home Icon -->
+                {% if request.user.role|upper == "ADMIN" or request.user.role|upper == "JUNIOR" or request.user.role|upper == "SENIOR" %}
+               <li>
+                <a href="{% url 'dashboard:editor_log_list' %}" 
+                    class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- Document with Pencil Icon for Editors Log -->
                     <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M3 9.75L12 3l9 6.75V21a1.5 1.5 0 01-1.5 1.5H4.5A1.5 1.5 0 013 21V9.75z" />
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span>Editors Log</span>
+                </a>
+                </li>
+                {% endif %}
+
+                {% if request.user.role|upper == "ADMIN" %}
+                <li>
+                <a href="{% url 'dashboard:clockify_reports' %}" class="flex items-center text-white hover:text-blue-500 gap-1 px-4 py-2 rounded hover:bg-white transition font-semibold">
+                    <!-- Bar Chart Icon for Reports -->
+                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                     <span>Clockify Reports</span>
                 </a>
                 </li>
+
                 {% endif %}
+
             </ul>
             </nav>
         </aside>

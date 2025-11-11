@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="min-h-screen flex items-center justify-center">
-  <div class="bg-gray-200 shadow-lg rounded-lg p-6 text-center w-full max-w-sm">
-    <h1 class="text-xl font-bold text-red-600 mb-2">Too Many Login Attempts</h1>
-    <p class="text-gray-700 mb-4">
-      You’ve been temporarily locked out for your security.
+  <div class="bg-gray-300 shadow-lg rounded-lg p-6 text-center w-full max-w-sm">
+    <h1 class="text-xl font-bold text-red-600 mb-2">Too Many Login Attempts!</h1>
+    <p class="text-gray-700 mb-4 font-semibold">
+      You’ve been temporarily locked out.
     </p>
 
     <!-- Hidden initially -->
-    <p id="countdownText" class="text-gray-700 mb-4 hidden">
+    <p id="countdownText" class="text-gray-700 mb-4 hidden font-small">
       Please wait <span id="countdown" class="font-semibold text-red-800"></span> before trying again.
     </p>
 
@@ -21,8 +21,8 @@
 </div>
 
 <script>
-  // Duration: 15 minutes (in seconds)
-  const LOCKOUT_DURATION = 15 * 60;
+  // Duration: 10 minutes (in seconds)
+  const LOCKOUT_DURATION = 10 * 60;
   const STORAGE_KEY = "lockout_start_time";
 
   const countdownEl = document.getElementById("countdown");

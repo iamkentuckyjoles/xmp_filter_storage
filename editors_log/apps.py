@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ClockifyIntegrationConfig(AppConfig):
+class EditorsLogConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'clockify_integration'
+    name = 'editors_log'

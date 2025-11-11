@@ -1,4 +1,4 @@
-{% extends 'dashboard/base_dashboard.html' %}
+// {% extends 'dashboard/base_dashboard.html' %}
 
 {% comment %}
   -------------------------------------------------------------------
@@ -15,6 +15,23 @@
     All {{ label }}
   </h2>
   {% include 'dashboard/components/message_alert.html' with alert_class="bg-green-600 text-white border-indigo-200 shadow-lg" %}
+
+  <!-- Email Search Form (Admin Only) -->
+  {% if request.user.role == 'admin' %}
+  <div class="mb-6 flex justify-end">
+    <form method="get" class="flex items-center space-x-2">
+      <input type="text" id="search_email" name="search_email" value="{{ search_query }}" 
+             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+             placeholder="Username or Email">
+      <button type="submit" class="bg-blue-600 text-black px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 hover:text-white">
+        Search
+      </button>
+      {% if search_query %}
+      <a href="{% url 'dashboard:view_users_by_role' role %}" class="text-gray-black bg-blue-600 px-4 py-2 rounded-lg hover:text-white hover:bg-blue-700">Clear</a>
+      {% endif %}
+    </form>
+  </div>
+  {% endif %}
 
   <table class="min-w-full bg-white border border-gray-200 rounded-md shadow-sm">
     <thead class="bg-gray-100 text-gray-700 text-sm">
@@ -39,6 +56,12 @@
               <a href="{% url 'users:admin_change_user_password' user.id %}" class="text-black hover:underline">Change Password</a>
             </td>
           {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="{% if role != 'admin' %}3{% else %}2{% endif %}" class="px-4 py-8 italic text-center text-gray-500">
+            No users found
+          </td>
         </tr>
       {% endfor %}
     </tbody>

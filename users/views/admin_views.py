@@ -55,4 +55,3 @@ def admin_change_user_password(request, user_id):
         return redirect('dashboard:view_forgot_password_requests')
 
     return render(request, 'dashboard/users/admin_change_password.html', {'user': user})
-

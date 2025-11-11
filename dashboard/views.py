@@ -1,4 +1,5 @@
 # dashboard/views.py
+from django.db.models import Q  # for complex queries
 from django.contrib import messages  # for flash messages
 from django.shortcuts import render, redirect, get_object_or_404  # for rendering and redirects
 from django.contrib.auth.decorators import login_required, user_passes_test  # for access control
@@ -11,7 +12,9 @@ from django.contrib.auth import get_user_model  # 🔄 Dynamically fetch the act
 from event.forms import EventSearchForm  # 🧾 Import search form from event app and handles search input from user
 from django.db.models import Q  # 🔍 Enables complex OR-based query filtering
 from dashboard.view_modules.user_views import edit_user, delete_user, update_role # Re-export modular views
-from django.core.paginator import Paginator  # For paginating querysets
+from django.core.paginator import Paginator 
+from clockify_integration.models import ClockifyWorkspace, ClockifyUsers, ClockifyProjects, ClockifyTimeEntry
+
 
 User = get_user_model()  # 🎯 Reference the CustomUser model defined in the users app
 
@@ -97,17 +100,28 @@ def view_users(request):
 @login_required
 @user_passes_test(is_admin)
 def view_users_by_role(request, role):
-    users = User.objects.filter(role=role).order_by('username')
+    search_query = request.GET.get('search_email', '')
+    users = User.objects.filter(role=role).order_by('username' or 'email')
+    
+    # Apply search filter if query exists
+    if search_query:
+        users = users.filter(
+            Q(email__icontains=search_query) | 
+            Q(username__icontains=search_query)
+        )
+    
     label_map = {
         'admin': 'Admins',
         'senior': 'Seniors',
         'junior': 'Juniors',
     }
     label = label_map.get(role, role.title())
+    
     return render(request, 'dashboard/users_by_role.html', {
         'users': users,
         'role': role,
         'label': label,
+        'search_query': search_query,  # Pass search query back to template
     })
 
 # List all event folders with optional search
@@ -202,28 +216,16 @@ def upload_filter(request, event_id):
         'event': event
     })
 
-from django.contrib import messages
+#clockify
+@user_passes_test(is_admin)
+def ClockifyReportsView(request):
 
-def delete_event(request, event_id):
-    try:
-        event = Event.objects.get(id=event_id)
-        event_name = event.name
-        event.delete()
-        messages.success(request, f'Event "{event_name}" was successfully deleted.')
-    except Event.DoesNotExist:
-        messages.error(request, 'Event not found.')
-    return redirect('dashboard:event_folders')
+     # Fetch all time entries with related user, project, and workspace
+    entries = ClockifyTimeEntry.objects.select_related(
+        'user', 'project', 'user__workspace', 'project__workspace'
+    ).all()
 
-def delete_filter(request, filter_id):
-    try:
-        filter_obj = Filter.objects.get(id=filter_id)
-        filter_name = filter_obj.name
-        event_id = filter_obj.event.id
-        filter_obj.delete()
-        messages.success(request, f'Filter "{filter_name}" was successfully deleted.')
-    except Filter.DoesNotExist:
-        messages.error(request, 'Filter not found.')
-    return redirect('dashboard:event_filters', event_id=event_id)
-
-
-
+    context = {
+        'entries': entries
+    }
+    return render(request, 'dashboard/clockify/clockify_reports.html', context)

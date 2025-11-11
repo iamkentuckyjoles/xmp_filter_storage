@@ -1,0 +1,46 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container mx-auto px-6">
+  <!-- Page Header -->
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-semibold text-white">Clockify Reports</h2>
+    <p class="text-base text-gray-700 mt-2">Overview of users, projects, and time entries</p>
+  </div>
+
+  <!-- Table Section -->
+  <div class="bg-base-200 rounded-lg shadow-lg p-6 overflow-x-auto">
+    <table class="table table-zebra w-full">
+      <thead class="bg-base-300 text-base font-semibold text-gray-700">
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Workspace</th>
+          <th>Total Duration</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for entry in entries %}
+        <tr class="hover:bg-base-100 transition text-center">
+          <td>{{ entry.user_name }}</td>
+          <td>{{ entry.email }}</td>
+          <td>{{ entry.workspace }}</td>
+          <td>{{ entry.formatted_duration }}</td>
+          <td>{{ entry.date|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center py-6 text-gray-500">
+            No entries available.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

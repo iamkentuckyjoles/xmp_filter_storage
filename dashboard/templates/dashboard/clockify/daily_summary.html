@@ -1,0 +1,45 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% block content %}
+
+<div class="container mx-auto px-6">
+  <!-- Page Header -->
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-semibold text-white">Daily User Summary</h2>
+    <p class="text-base text-gray-700 mt-2">
+      Displays each user’s latest entry per day
+    </p>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-base-200 rounded-lg shadow-lg p-6 overflow-x-auto">
+    <table class="table table-zebra w-full">
+      <thead class="bg-base-300 text-base font-semibold">
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Duration</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for entry in latest_entries %}
+        <tr class="hover:bg-base-100 transition text-center">
+          <td>{{ entry.user.name }}</td>
+          <td>{{ entry.user.email }}</td>
+          <td>{{ entry.duration }}</td>
+          <td>{{ entry.start_time|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center py-6 text-gray-500">
+            No entries available.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

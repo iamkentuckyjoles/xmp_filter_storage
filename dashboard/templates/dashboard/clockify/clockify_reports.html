@@ -1,0 +1,49 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container mx-auto px-6">
+  <!-- Page Header -->
+  <div class="text-center mb-8">
+    <h2 class="text-2xl font-semibold text-white">Clockify Reports</h2>
+    <p class="text-gray-300 mt-2">Overview of all workspaces, users, projects, and time entries</p>
+  </div>
+
+  <!-- Data Table -->
+  <div class="overflow-x-auto bg-white shadow-lg rounded-2xl p-6">
+    <table class="min-w-full border border-gray-200 text-sm rounded-lg overflow-hidden">
+      <thead class="bg-gray-800 text-white uppercase text-xs font-semibold ">
+        <tr class= "text-center">
+          <th class="border px-4 py-3 ">Workspace</th>
+          <th class="border px-4 py-3 ">Username</th>
+          <th class="border px-4 py-3 ">Email</th>
+          <th class="border px-4 py-3 ">Project</th>
+          <th class="border px-4 py-3 ">Description</th>
+          <th class="border px-4 py-3 ">Start</th>
+          <th class="border px-4 py-3 ">End</th>
+          <th class="border px-4 py-3 ">Duration</th>
+        </tr>
+      </thead>
+      <tbody class="text-gray-700 text-center">
+        {% for entry in entries %}
+        <tr class="hover:bg-gray-100 transition-colors duration-150">
+          <td class="border px-4 py-2">{{ entry.user.workspace.name }}</td>
+          <td class="border px-4 py-2">{{ entry.user.name }}</td>
+          <td class="border px-4 py-2">{{ entry.user.email }}</td>
+          <td class="border px-4 py-2">{{ entry.project.name }}</td>
+          <td class="border px-4 py-2">{{ entry.description|default:"—" }}</td>
+          <td class="border px-4 py-2">{{ entry.start|date:"M d, Y h:i A" }}</td>
+          <td class="border px-4 py-2">{{ entry.end|date:"M d, Y h:i A" }}</td>
+          <td class="border px-4 py-2">{{ entry.duration }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center text-gray-500 py-6">No time entries found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

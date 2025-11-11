@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views  # built-in auth views
-from django.urls import path  # for defining URL patterns
-from dashboard import views
+from django.urls import path, include  # for defining URL patterns
+from dashboard import views  # local views
 from dashboard.view_modules.event_views import delete_event, edit_event
 from dashboard.view_modules.filter_views import delete_filter  # dashboard views
 from . import views  # local views (redundant if already imported above)
@@ -8,6 +8,7 @@ from dashboard.view_modules.user_views import edit_user, delete_user, update_rol
 from .views import view_users_by_role
 from dashboard.view_modules import user_views   
 from dashboard.view_modules.user_views import view_forgot_password_requests # forgot password requests view
+from dashboard.view_modules.clockify_views import ClockifyReportsView
 
 app_name = 'dashboard'
 
@@ -36,4 +37,10 @@ urlpatterns = [
     # 📬 Route to view all forgot password requests (admin-only)
     path('forgot-password-requests/', user_views.view_forgot_password_requests, name='view_forgot_password_requests'),
     path('forgot-password-requests/<int:request_id>/handled/', user_views.mark_forgot_password_handled, name='mark_forgot_password_handled'),
+    # ⏱️ Clockify Integration Dashboard
+    path('clockify/', views.ClockifyReportsView, name = 'clockify_reports'),  # Clockify integration URLs
+    path('clockify/', include('clockify_integration.urls')),  # Clockify integration URLs
+
+    # 📝 Editors Log URLs
+    path('', include('editors_log.urls')),
 ]

@@ -73,7 +73,9 @@ INSTALLED_APPS = [
     'users',
     'dashboard',
     'event',
+    'rest_framework',
     'clockify_integration',
+    'editors_log',
     #style
     'widget_tweaks',
     #security

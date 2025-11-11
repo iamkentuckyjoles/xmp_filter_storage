@@ -32,7 +32,8 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),  # Login view using custom template
     path('user/', include(('users.urls', 'users'), namespace='users')),  # User-related routes
     path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),  # Dashboard routes with namespace
-    path('clockify/', include('clockify_integration.urls', namespace='clockify_integration')), # Include clockify app URLs
+    path('api/clockify/', include('clockify_integration.urls')),
+
 ]
 
 # Serve media files during development

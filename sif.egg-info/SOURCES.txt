@@ -5,13 +5,6 @@ SIF/asgi.py
 SIF/settings.py
 SIF/urls.py
 SIF/wsgi.py
-clockify_integration/__init__.py
-clockify_integration/admin.py
-clockify_integration/apps.py
-clockify_integration/models.py
-clockify_integration/tests.py
-clockify_integration/urls.py
-clockify_integration/views.py
 dashboard/__init__.py
 dashboard/admin.py
 dashboard/apps.py

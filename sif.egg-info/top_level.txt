@@ -1,5 +1,4 @@
 SIF
-clockify_integration
 dashboard
 event
 users

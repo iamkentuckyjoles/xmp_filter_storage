@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clockify Data Table</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-8">
+  <h1 class="text-2xl font-bold mb-6 text-center">Clockify Data Overview</h1>
+
+  <div class="overflow-x-auto bg-white shadow-md rounded-lg p-4">
+    <table class="min-w-full border border-gray-200 text-sm">
+      <thead class="bg-gray-200 text-gray-700">
+        <tr>
+          <th class="border px-4 py-2">Workspace</th>
+          <th class="border px-4 py-2">Username</th>
+          <th class="border px-4 py-2">Email</th>
+          <th class="border px-4 py-2">Project</th>
+          <th class="border px-4 py-2">Description</th>
+          <th class="border px-4 py-2">Start</th>
+          <th class="border px-4 py-2">End</th>
+          <th class="border px-4 py-2">Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in entries %}
+        <tr class="hover:bg-gray-50">
+          <td class="border px-4 py-2">{{ entry.user.workspace.name }}</td>
+          <td class="border px-4 py-2">{{ entry.user.name }}</td>
+          <td class="border px-4 py-2">{{ entry.user.email }}</td>
+          <td class="border px-4 py-2">{{ entry.project.name }}</td>
+          <td class="border px-4 py-2">{{ entry.description|default:"—" }}</td>
+          <td class="border px-4 py-2">{{ entry.start|date:"Y-m-d H:i" }}</td>
+          <td class="border px-4 py-2">{{ entry.end|date:"Y-m-d H:i" }}</td>
+          <td class="border px-4 py-2">{{ entry.duration }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center text-gray-500 py-4">No time entries found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

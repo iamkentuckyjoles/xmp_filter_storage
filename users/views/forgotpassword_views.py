@@ -22,13 +22,11 @@ def forgot_password(request):
         name = request.POST.get('name')
         email = request.POST.get('email')
         role = request.POST.get('role')
-        message = request.POST.get('message')
 
         ForgotPasswordRequest.objects.create(
             name=name,
             email=email,
             role=role,
-            message=message,
         )
 
         messages.success(request, 'Your request has been submitted successfully. Please check your email within the day. Thank you!')
