@@ -31,7 +31,7 @@ urlpatterns = [
     path('admin/', custom_admin_site.urls),  # Custom admin route
     path('login/', auth_views.LoginView.as_view(template_name='user/login.html'), name='login'),  # Login view using custom template
     path('user/', include(('users.urls', 'users'), namespace='users')),  # User-related routes
-    path('dashboard/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),  # Dashboard routes with namespace
+    path('', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),  # Dashboard routes with namespace
     path('api/clockify/', include('clockify_integration.urls')),
 
 ]

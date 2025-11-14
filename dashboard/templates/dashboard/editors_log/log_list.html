@@ -44,9 +44,27 @@
       {% for log in logs %}
       <div class="bg-white p-4 rounded-md shadow-sm border flex items-center justify-between min-h-[60px]">  <!-- Reduced min-height for single-line focus; adjust as needed -->
         <!-- Single-line display for all log data -->
-        <p class="text-sm whitespace-normal flex-1">  <!-- Allows wrapping if too long; keeps it inline -->
-          <strong>{{ log.user.username }}</strong> <strong>|</strong> Event: {{ log.event }} <strong>|</strong> Clip: {{ log.clip }} <strong>|</strong> Team: {{ log.teamedit }} <strong>|</strong> Indie: {{ log.indiedit }} <strong>|</strong> Build: {{ log.build }} <strong>|</strong> Notes: {{ log.notes|default:"—" }} <strong>|</strong> Duration: {{ log.get_duration_24h }}
-        </p>
+        <p class="text-sm whitespace-normal flex-1">
+
+        {% if request.user.role == "admin" %}
+            <strong>
+                <a href="{% url 'dashboard:user_editor_logs' log.user.id %}" 
+                  class="text-blue-600 hover:underline">
+                    {{ log.user.username }}
+                </a>
+            </strong>
+        {% else %}
+            <strong>{{ log.user.username }}</strong>
+        {% endif %}
+
+        <strong>|</strong> Event: {{ log.event }}
+        <strong>|</strong> Clip: {{ log.clip }}
+        <strong>|</strong> Team: {{ log.teamedit }}
+        <strong>|</strong> Indie: {{ log.indiedit }}
+        <strong>|</strong> Build: {{ log.build }}
+        <strong>|</strong> Notes: {{ log.notes|default:"—" }}
+        <strong>|</strong> Duration: {{ log.get_duration_24h }}
+    </p>
         {% if request.user == log.user %}
         <a href="{% url 'dashboard:edit_editor_log' log.id %}" class="text-blue-600 hover:underline ml-2 flex-shrink-0">Edit</a>
         {% endif %}

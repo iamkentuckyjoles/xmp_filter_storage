@@ -1,0 +1,102 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block content %}
+<header class="mb-8 text-center">
+    <h2 class="text-2xl font-semibold text-white centered">
+        Logs of {{ target_user.get_full_name|default:target_user.username }}
+    </h2>
+</header>
+
+<div class="container mx-auto p-4">
+
+    <!-- Date Filter -->
+    <div class="mb-4 flex justify-end">
+        <form method="get" class="flex items-center space-x-2">
+            <label for="filter_date" class="text-medium font-semibold">Filter by Date:</label>
+
+            <input type="date" id="filter_date" name="filter_date"
+                   value="{{ filter_date|default:'' }}"
+                   class="border rounded px-2 py-1">
+
+            <button type="submit"
+                    class="bg-white text-black px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white">
+                Filter
+            </button>
+
+            {% if filter_date %}
+            <a href="{% url 'dashboard:user_editor_logs' target_user.id %}"
+               class="bg-white text-black px-4 py-2 rounded-md hover:bg-blue-700 hover:text-white">
+                Clear
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Pagination Info -->
+    <div class="mb-4">
+        <p>
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            ({{ page_obj.paginator.count }} total logs{% if filter_date %} for {{ filter_date }}{% endif %})
+        </p>
+    </div>
+
+    <!-- Grouped Logs (Copied Style) -->
+    {% for day, logs in grouped_logs.items %}
+    <div class="border rounded-md mb-6 p-4 shadow-sm">
+        <h3 class="text-lg font-semibold mb-3">{{ day }}</h3>
+
+        <!-- 5-column grid layout matching main page -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {% for log in logs %}
+            <div class="bg-white p-4 rounded-md shadow-sm border flex items-center justify-between min-h-[60px]">
+
+                <p class="text-sm whitespace-normal flex-1">
+                    <strong>User:</strong> {{ target_user.username }}
+                    <strong>|</strong> Event: {{ log.event }}
+                    <strong>|</strong> Clip: {{ log.clip }}
+                    <strong>|</strong> Team: {{ log.teamedit }}
+                    <strong>|</strong> Indie: {{ log.indiedit }}
+                    <strong>|</strong> Build: {{ log.build }}
+                    <strong>|</strong> Notes: {{ log.notes|default:"—" }}
+                    <strong>|</strong> Duration: {{ log.get_duration_24h }}
+                </p>
+
+                {% if request.user == log.user %}
+                <a href="{% url 'dashboard:edit_editor_log' log.id %}"
+                   class="text-blue-600 hover:underline ml-2 flex-shrink-0">
+                    Edit
+                </a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% empty %}
+    <p class="italic text-center">
+        No logs found{% if filter_date %} for {{ filter_date }}{% endif %}.
+    </p>
+    {% endfor %}
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-6">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if filter_date %}&filter_date={{ filter_date }}{% endif %}"
+           class="mx-1 px-3 py-2 bg-gray-200 rounded">First</a>
+
+        <a href="?page={{ page_obj.previous_page_number }}{% if filter_date %}&filter_date={{ filter_date }}{% endif %}"
+           class="mx-1 px-3 py-2 bg-gray-200 rounded">Previous</a>
+        {% endif %}
+
+        <span class="mx-1 px-3 py-2">{{ page_obj.number }}</span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if filter_date %}&filter_date={{ filter_date }}{% endif %}"
+           class="mx-1 px-3 py-2 bg-gray-200 rounded">Next</a>
+
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if filter_date %}&filter_date={{ filter_date }}{% endif %}"
+           class="mx-1 px-3 py-2 bg-gray-200 rounded">Last</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

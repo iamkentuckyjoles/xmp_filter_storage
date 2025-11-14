@@ -1,9 +1,12 @@
 # views.py
+from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import EditorLog
 from .forms import EditorLogForm
 from django.core.paginator import Paginator  
+
+User = get_user_model()
 
 @login_required
 def editor_log_list(request):
@@ -80,3 +83,39 @@ def edit_editor_log(request, pk):
         form = EditorLogForm(instance=log, initial=initial)
 
     return render(request, 'dashboard/editors_log/edit_log.html', {'form': form, 'log': log})
+
+@login_required
+def user_editor_logs(request, user_id):
+    # Find the user you clicked
+    target_user = get_object_or_404(User, id=user_id)
+
+    # Get ALL logs of that user (not filtered by your admin/senior/junior logic)
+    logs = EditorLog.objects.filter(user=target_user)
+
+    # Date filtering (optional)
+    filter_date = request.GET.get('filter_date')
+    if filter_date:
+        try:
+            year, month, date = map(int, filter_date.split('-'))
+            logs = logs.filter(year=year, month=month, date=date)
+        except ValueError:
+            pass
+
+    logs = logs.order_by('-year', '-month', '-date', '-id')
+
+    paginator = Paginator(logs, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Group logs by day
+    grouped_logs = {}
+    for log in page_obj.object_list:
+        day_key = f"{log.year}-{log.month:02d}-{log.date:02d}"
+        grouped_logs.setdefault(day_key, []).append(log)
+
+    return render(request, 'dashboard/editors_log/user_logs.html', {
+        'target_user': target_user,
+        'grouped_logs': grouped_logs,
+        'page_obj': page_obj,
+        'filter_date': filter_date
+    })
